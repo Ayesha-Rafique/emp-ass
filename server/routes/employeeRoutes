@@ -1,0 +1,36 @@
+const express = require('express');
+const router = express.Router();
+const Employee = require('../models/employeeModel');
+
+// Add Employee
+router.post('/', async (req, res) => {
+  const { name, email, joiningDate, designation, contact, workProfile } = req.body;
+
+  const newEmployee = new Employee({
+    name,
+    email,
+    joiningDate,
+    designation,
+    contact,
+    workProfile,
+  });
+
+  try {
+    await newEmployee.save();
+    res.status(201).json(newEmployee);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// Get All Employees
+router.get('/', async (req, res) => {
+  try {
+    const employees = await Employee.find();
+    res.json(employees);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+module.exports = router;
